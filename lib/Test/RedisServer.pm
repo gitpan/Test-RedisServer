@@ -3,12 +3,13 @@ use strict;
 use warnings;
 use Any::Moose;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use Carp;
 use File::Temp;
 use POSIX qw(SIGTERM WNOHANG);
 use Time::HiRes qw(sleep);
+use Errno ();
 
 has auto_start => (
     is      => 'rw',
@@ -84,7 +85,15 @@ sub start {
         close $conffh;
 
         exec 'redis-server', "$tmpdir/redis.conf"
-            or exit($?);
+            or do {
+                if ($! == Errno::ENOENT) {
+                    print STDERR "exec failed: no such file or directory\n";
+                }
+                else {
+                    print STDERR "exec failed: unexpected error: $!\n";
+                }
+                exit($?);
+            }
     }
     close $logfh;
 
@@ -283,6 +292,10 @@ This parameter is designed to pass directly to L<Redis> module.
 
     my $redis_server = Test::RedisServer->new;
     my $redis = Redis->new( $redis_server->connect_info );
+
+=head2 pid
+
+Return redis-server instance's process id, or undef when redis-server is not running.
 
 =head2 wait_exit
 
