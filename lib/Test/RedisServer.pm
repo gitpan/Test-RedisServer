@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Any::Moose;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use Carp;
 use File::Temp;
@@ -128,7 +128,7 @@ sub start {
         if ($self->pid) {
             $self->pid(undef);
             kill SIGTERM, $pid;
-            while (waitpid($self->pid, 0) <= 0) {
+            while (waitpid($pid, 0) <= 0) {
             }
         }
 
