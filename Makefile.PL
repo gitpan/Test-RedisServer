@@ -9,7 +9,11 @@ BEGIN {
     );
     my @not_available;
 
-    eval qq{use inc::Module::Install; 1;} or push @not_available, 'inc::Module::Install';
+    {
+        local *STDOUT;
+        eval qq{use inc::Module::Install; 1;} or push @not_available, 'inc::Module::Install';
+    }
+
     for my $mod (@devmods) {
         eval qq{require $mod} or push @not_available, $mod;
     }
@@ -23,6 +27,7 @@ BEGIN {
 }
 
 use inc::Module::Install;
+$Module::Install::AUTHOR = 0 if $ENV{TRAVIS};
 
 name 'Test-RedisServer';
 all_from 'lib/Test/RedisServer.pm';
