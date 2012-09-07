@@ -23,7 +23,7 @@
       "build" : {
          "requires" : {
             "ExtUtils::MakeMaker" : "6.36",
-            "Redis" : 0,
+            "Redis" : "1.925",
             "Test::More" : "0.86",
             "Test::TCP" : "1.17"
          }
@@ -41,5 +41,5 @@
       }
    },
    "release_status" : "stable",
-   "version" : "0.09"
+   "version" : "0.10"
 }
